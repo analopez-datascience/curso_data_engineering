@@ -11,25 +11,22 @@ WITH stg_orders AS (
 
 
 renamed_casted AS (
-     SELECT
-        order_id,
-        shipping_service,
-        shipping_cost,
-        address_id,
-        created_at,
-        promo_id,
-        estimated_delivery_at,
-        order_cost,
-        user_id,
-        order_total,
-        delivered_at,
-        tracking_id,
-        status,
-        _fivetran_deleted,
-        _fivetran_synced
+    SELECT
+        order_id 
+        , user_id 
+        , promo_id
+        , address_id
+        , created_at
+        , shipping_cost
+        , order_cost
+        , tracking_id
+        , shipping_service
+        , estimated_delivery_at
+        , delivered_at
+		, DATEDIFF(day, created_at, delivered_at) AS days_to_deliver        
+        , status
+        , date_load
     FROM stg_orders
     )
-
-
 
 SELECT * FROM renamed_casted
