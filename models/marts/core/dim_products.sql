@@ -5,13 +5,12 @@
 }}
 
 WITH stg_promos AS (
-    SELECT * 
+    SELECT *
     FROM {{ ref('stg_products') }}
 ),
 
-stg_promos_casted as 
-(
-    SELECT 
+stg_promos_casted AS (
+    SELECT
         product_id,
         price,
         name,

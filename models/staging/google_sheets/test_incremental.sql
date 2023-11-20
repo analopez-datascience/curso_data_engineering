@@ -7,22 +7,22 @@
 
 
 WITH stg_budget_products AS (
-    SELECT * 
+    SELECT *
     FROM {{ source('google_sheets','budget') }}
-{% if is_incremental() %}
+    {% if is_incremental() %}
 
-	  where _fivetran_synced > (select max(_fivetran_synced) from {{ this }})
+        WHERE _fivetran_synced > (SELECT max(_fivetran_synced) FROM {{ this }})
 
-{% endif %}
-    ),
+    {% endif %}
+),
 
 renamed_casted AS (
     SELECT
-          _row
-        , month
-        , quantity 
-        , _fivetran_synced
+        _row,
+        month,
+        quantity,
+        _fivetran_synced
     FROM stg_budget_products
-    )
+)
 
 SELECT * FROM renamed_casted
