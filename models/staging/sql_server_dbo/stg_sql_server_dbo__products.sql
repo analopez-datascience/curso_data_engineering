@@ -10,11 +10,10 @@ renamed as (
 
     select
         product_id,
-        price,
-        name,
+        cast (price as float) as price,
+        name as name_product,
         inventory,
-        _fivetran_deleted,
-        _fivetran_synced
+        cast (_fivetran_synced as timestamp_ntz(9)) as date_load_utc
 
     from source
 

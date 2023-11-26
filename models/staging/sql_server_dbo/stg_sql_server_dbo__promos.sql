@@ -9,11 +9,10 @@ source as (
 renamed as (
 
     select
-        promo_id,
+        promo_id as promotion_name,
         discount,
         status,
-        _fivetran_deleted,
-        _fivetran_synced
+        cast (_fivetran_synced as timestamp_ntz(9)) as date_load_utc
 
     from source
 
