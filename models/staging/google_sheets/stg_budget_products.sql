@@ -13,7 +13,7 @@ renamed as (
         quantity,
         month,
         product_id,
-        _fivetran_synced
+        _fivetran_synced as date_load
 
     from source
 
