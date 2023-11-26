@@ -1,111 +1,223 @@
 version: 2
 
 sources:
-
-  - name: src_sql_server_dbo # name of the source 
+  - name: sql_server_dbo # name of the source
     schema: sql_server_dbo # this is the schema our raw data lives in
     database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB" # this is the name of our database
-
 
     quoting:
       database: false
       schema: false
-      identifier: false 
+      identifier: false
 
     freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 10, period: day} 
-
-
+      warn_after: { count: 24, period: hour }
+      error_after: { count: 48, period: hour }
 
     tables:
-
       - name: addresses
+        description: "Indicates the addresses of users or orders."
         loaded_at_field: _fivetran_synced
         columns:
-         - name: zipcode
-         - name: country
-         - name: address
-         - name: state
-         - name: _fivetran_deleted
-         - name: _fivetran_synced
-
-      -  name: events
-         loaded_at_field: _fivetran_synced
-         columns:
-          - name: event_id
-          - name: page_url
-          - name: event_type
-          - name: user_id
-          - name: product_id
-          - name: session_id
-          - name: created_at
-          - name: order_id
-          - name: _fivetran_deleted
-          - name: _fivetran_synced
-
-      -  name: orders
-         loaded_at_field: _fivetran_synced
-         columns:
-          - name: order_id
-          - name: shipping_service
-          - name: shipping_cost
-          - name: address_id  
-          - name: created_at
-          - name: promo_id
-          - name: estimated_delivery
-          - name: order_cost
-          - name: user_id
-          - name: order_total
-          - name: delivered_at
-          - name: tracking_id
-          - name: status
-          - name: _fivetran_deleted
-          - name: _fivetran_synced
-
-
-      -  name: order_items
-         loaded_at_field: _fivetran_synced
-         columns:
-          - name: order_id
-          - name: product_id
-          - name: quantity
-          - name: _fivetran_deleted
-          - name: _fivetran_synced
-
-
-      -  name: products
-         loaded_at_field: _fivetran_synced
-         columns:
-          - name: product_id
-          - name: price
-          - name: name
-          - name: inventory
-          - name: _fivetran_deleted
-          - name: _fivetran_synced
-
-
-      -  name: promos
-         loaded_at_field: _fivetran_synced
-         columns:
-          - name: promo_id
-          - name: discount
-          - name: status
-          - name: _fivetran_deleted
-          - name: _fivetran_synced
-  
-
-      -  name: users
-         loaded_at_field: _fivetran_synced
-         columns:
-          - name: user_id
-          - name: update_at
           - name: address_id
-          - name: last_name
-          - name: created_at
-          - name: phone_number
-          - name: total_orders
-          - name: first_name
-          - name: email
+            data_type: varchar(256)
+            description: "Identifier of the addresses."
+          - name: zipcode
+            data_type: number(38,0)
+            description: "Postal code."
+          - name: country
+            data_type: varchar(256)
+            description: "Country."
+          - name: address
+            data_type: varchar(256)
+            description: "More detailed address information. E.g., Main Street, 1."
+          - name: state
+            data_type: varchar(256)
+            description: "State in which the address is located. E.g., Virginia."
           - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
           - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
+
+      - name: events
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: event_id
+            data_type: varchar(1024)
+            description: "Identifier of the event that is triggered when the user enters the website."
+          - name: page_url
+            data_type: varchar(1024)
+            description: "Web page that the user has visited."
+          - name: event_type
+            data_type: varchar(1024)
+            description: "Type of action that the user performs on the website. E.g., 'checkout' or 'add_to_cart'."
+          - name: user_id
+            data_type: varchar(1024)
+            description: "Identifier of the customer in the database who is performing the event."
+          - name: product_id
+            data_type: varchar(1024)
+            description: "Identifier of the product with which the user is interacting on the website."
+          - name: session_id
+            data_type: varchar(1024)
+            description: "Identifier of the session that the user is conducting. This identifier is unique throughout the user's event."
+          - name: created_at
+            data_type: timestamp_ntz(9)
+            description: "Date when the event record was created."
+          - name: order_id
+            data_type: varchar(1024)
+            description: "Identifier of the order corresponding to the event."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
+          - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
+
+
+      - name: orders
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: order_id
+            data_type: varchar(256)
+            description: "Identifier of the order placed by the user."
+          - name: shipping_service
+            data_type: varchar(256)
+            description: "Type of service used for shipping."
+          - name: shipping_cost
+            data_type: float
+            description: "Cost of shipping for the order."
+          - name: address_id
+            data_type: varchar(256)
+            description: "Identifier indicating the address to which the shipment will be sent."
+          - name: created_at
+            data_type: timestamp_ntz(9)
+            description: "Date when the shipment record was created."
+          - name: promo_id
+            data_type: varchar(256)
+            description: "Identifier of the promotion associated with this order."
+          - name: estimated_delivery_at
+            data_type: timestamp_ntz(9)
+            description: "Estimated delivery date for the shipment."
+          - name: order_cost
+            data_type: float
+            description: "Cost of the order excluding shipping cost."
+          - name: user_id
+            data_type: varchar(256)
+            description: "Identifier of the user who placed the order."
+          - name: order_total
+            data_type: float
+            description: "Total cost of the order including shipping cost."
+          - name: delivered_at
+            data_type: timestamp_ntz(9)
+            description: "Date when the order will be shipped."
+          - name: tracking_id
+            data_type: varchar(256)
+            description: "Identifier received by the order when its status changes from 'preparation' to 'shipped' or 'delivered'."
+          - name: status
+            data_type: varchar(256)
+            description: "Process through which the order goes from being prepared to being shipped."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
+          - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
+
+      - name: order_items
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: order_id
+            data_type: varchar(256)
+            description: "Identifier of the order."
+          - name: product_id
+            data_type: varchar(256)
+            description: "Identifier of the product within the order."
+          - name: quantity
+            data_type: number(38,0)
+            description: "Quantity of the product in the shipment."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
+          - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
+
+      - name: products
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: product_id
+            data_type: varchar(256)
+            description: "Identifier of the product."
+          - name: price
+            data_type: float
+            description: "Price of the product."
+          - name: name
+            data_type: varchar(256)
+            description: "Name of the product."
+          - name: inventory
+            data_type: number(38,0)
+            description: "Product stock."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
+          - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
+
+      - name: promos
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: promo_id
+            data_type: varchar(256)
+            description: "Identifier of the promotion."
+          - name: discount
+            data_type: number(38,0)
+            description: "Discount associated with the promotion."
+          - name: status
+            data_type: varchar(256)
+            description: "Status of the promotion, which can be active or inactive."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
+          - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
+
+      - name: users
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: user_id
+            data_type: varchar(256)
+            description: "User identifier."
+          - name: updated_at
+            data_type: timestamp_ntz(9)
+            description: "Date when the user record was updated."
+          - name: address_id
+            data_type: varchar(256)
+            description: "Identifier of the user's address."
+          - name: last_name
+            data_type: varchar(256)
+            description: "User's last name."
+          - name: created_at
+            data_type: timestamp_ntz(9)
+            description: "Date when the user record was created."
+          - name: phone_number
+            data_type: varchar(256)
+            description: "User's phone number."
+          - name: total_orders
+            data_type: number(38,0)
+            description: "Total number of orders placed by the user."
+          - name: first_name
+            data_type: varchar(256)
+            description: "User's first name."
+          - name: email
+            data_type: varchar(256)
+            description: "User's email."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Timestamp when the record was deleted in Fivetran."
+          - name: _fivetran_synced
+            data_type: boolean
+            description: "Timestamp when the record was added in Fivetran."
