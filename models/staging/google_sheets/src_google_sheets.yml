@@ -17,21 +17,21 @@ sources:
     tables:
       - name: budget
         loaded_at_field: _fivetran_synced
-        description: >
-          Data about budget in demo.
+        description: "Datos presupuesto"
+  
         columns:
           - name: _row
-            description: >
-              Number of each row from google sheet.
+            description: "Id de la columna identificativa"
+             
           - name: product_id
-            description: >
-              UUID for each unique product on platform.
+            description: "Identificación del producto"
+              
           - name: quantity
-            description: >
-              Number of units for each product and each month for products.
+            description: "Cantidad"
+              
           - name: month
-            description: >
-              Each month for the budget -> End of the month.
+            description: "Mes"
+
           - name: _fivetran_synced
-            description: >
-              Date that the data was loaded.
+            description: "Sincronización con fivetran"
+          
