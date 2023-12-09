@@ -27,13 +27,13 @@ sources:
             description: "Postal code."
           - name: country
             data_type: varchar(256)
-            description: "Country."
+            description: "Country"
           - name: address
             data_type: varchar(256)
-            description: "More detailed address information. E.g., Main Street, 1."
+            description: "More detailed address information."
           - name: state
             data_type: varchar(256)
-            description: "State in which the address is located. E.g., Virginia."
+            description: "State"
           - name: _fivetran_deleted
             data_type: boolean
             description: "Timestamp when the record was deleted in Fivetran."
@@ -46,10 +46,10 @@ sources:
         columns:
           - name: event_id
             data_type: varchar(1024)
-            description: "Identifier of the event that is triggered when the user enters the website."
+            description: "Identifier of the event that is triggered when the user enters the website"
           - name: page_url
             data_type: varchar(1024)
-            description: "Web page that the user has visited."
+            description: "Web page that the user has visited"
           - name: event_type
             data_type: varchar(1024)
             description: "Type of action that the user performs on the website. E.g., 'checkout' or 'add_to_cart'."
