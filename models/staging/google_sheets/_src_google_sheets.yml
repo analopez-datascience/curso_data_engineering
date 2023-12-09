@@ -17,21 +17,24 @@ sources:
     tables:
       - name: budget
         loaded_at_field: _fivetran_synced
-        description: "Datos presupuesto"
+        description: "Data about budget"
   
         columns:
           - name: _row
-            description: "Id de la columna identificativa"
+            description: "Number of each row from google sheet"
              
           - name: product_id
-            description: "Identificación del producto"
+            description: "UUID for each unique product on platform"
               
           - name: quantity
-            description: "Cantidad"
+            description: "Number of units for each product and each month for products"
               
           - name: month
-            description: "Mes"
+            description: "Each month for the budget"
 
           - name: _fivetran_synced
-            description: "Sincronización con fivetran"
+            description: "Date that the data was loaded"
+
+
+#This source refers to the data that we ingest through Fivetran from a Google Sheets, and that includes the Budget of the company's products.
           
