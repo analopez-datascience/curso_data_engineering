@@ -7,7 +7,6 @@ El desarrollo de este proyecto constará de las siguientes partes:
 En DEV;Modelado de datos desde la capa bronce (sources), desde la que crearemos la capa silver (staging) que finalmente
 se convertirá en las tablas de fct y dim en la capa gold.
 
-En PRO;Pasaremos todas las actualizaciones al main que finamente se  verán reflejadas en Snowflake.
 
 Contamos con ocho tablas que provienen de Sql Server y de un archivo de Google Sheet que cargamos a través de Fivetran. 
 
