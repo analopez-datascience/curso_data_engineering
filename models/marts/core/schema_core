@@ -1,0 +1,132 @@
+version: 2
+
+models:
+
+  - name: dim_ADDRESSES
+    description: Dimension table where we store the addresses of business users
+    
+    columns:
+      - name: address_id
+        data_type: varchar(256)
+        description: "Identifier of the addresses."
+        tests:
+          - unique
+          - not_null
+
+        - name: zipcode
+        data_type: number(38,0)
+        description: "Postal code."
+
+      - name: country
+        data_type: varchar(256)
+        description: "More detailed address information."
+
+      - name: state
+        data_type: varchar(256)
+        description: "More detailed address information."
+
+      - name: date_load
+        data_type: Timestamp
+        description: "Timestamp when the record was added in Fivetran."
+
+
+
+
+ - name: dim_PROMOS
+    description: Dimensional table containing information about promotions used in the business
+    columns:
+      - name: promo_sk
+        data_type: varchar
+        description: a surrogate key generated to our table through "promo_id".
+        tests:
+          - unique
+          - not_null
+
+      - name: promo_id
+        data_type: varchar
+        description: a primary key from the source database.
+        tests:
+          - unique
+          - not_null
+
+      - name: promo_discount_percent
+        data_type: float
+        description: the percentage of discount of a promotion.
+        tests:
+          - not_null
+          - positive_values
+
+      - name: discount_unit
+        data_type: float
+        description: the decimal value of a discount of a promotion (promo_discount_percent/100).
+        tests:
+          - not_null
+          - positive_values
+
+      - name: promo_status
+        data_type: varchar
+        description: the status of a promotion.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['active','inactive']
+
+
+
+  
+
+
+   
+  - name: dim_USERS
+    description: a dimensional table who shows the information of our users.
+    columns:
+      - name: date_key
+        data_type: varchar
+        description: a foreigh key to connect this table with the table "dim_dates".
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: user_sk
+        data_type: varchar
+        description: a surrogate key generated to our table through "user_id". 
+
+      - name: user_id
+        data_type: varchar
+        description: a primary key from the source database.
+
+      - name: address_sk
+        data_type: varchar
+        description: a foreigh key to connect this table with the table "dim_addresses".
+        tests:
+          - relationships:
+              to: ref('dim_addresses')
+              field: address_sk
+
+      - name: full_name
+        data_type: varchar
+        description: Full name of the user (concat first_name and last_name).
+
+      - name: email
+        data_type: varchar
+        description: Email address of the user.
+
+      - name: phone_number
+        data_type: varchar
+        description: Phone number of the user.
+
+      - name: created_at_utc
+        data_type: timestamp_ltz
+        description: Timestamp indicating when the user was created, in UTC.
+
+      - name: updated_at_utc
+        data_type: timestamp_ltz
+        description: Timestamp indicating when the record was last updated, in UTC.
+
+
+
+
+ 
+
+
