@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('src_sql_server_dbo', 'order_items') }}
+    select * from {{ source('sql_server_dbo', 'order_items') }}
 
 ),
 
@@ -12,9 +12,7 @@ renamed as (
         order_id,
         product_id,
         quantity,
-        _fivetran_deleted,
-        _fivetran_synced
-
+        cast (_fivetran_synced as timestamp_ntz(9)) as date_load_utc
     from source
 
 )

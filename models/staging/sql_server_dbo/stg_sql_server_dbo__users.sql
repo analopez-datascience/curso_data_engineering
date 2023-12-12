@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('src_sql_server_dbo', 'users') }}
+    select * from {{ source('sql_server_dbo', 'users') }}
 
 ),
 
@@ -14,12 +14,10 @@ renamed as (
         address_id,
         last_name,
         created_at,
-        phone_number,
-        total_orders,
+        cast(regexp_replace(phone_number, '-', '') as number) as phone_number,
         first_name,
         email,
-        _fivetran_deleted,
-        _fivetran_synced
+        cast (_fivetran_synced as timestamp_ntz(9)) as date_load_utc
 
     from source
 

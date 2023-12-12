@@ -1,12 +1,6 @@
-{{
-  config(
-    materialized='table'
-  )
-}}
-
-WITH stg_orders AS (
+WITH stg_sql_server_dbo__orders AS (
     SELECT * 
-    FROM {{ ref('stg_orders') }}
+    FROM ALUMNO22_DEV_SILVER_DB.sql_server_dbo.stg_sql_server_dbo__orders
 ),
 
 
@@ -19,14 +13,16 @@ renamed_casted AS (
         , created_at
         , shipping_cost
         , order_cost
-        , tracking_id
-        , shipping_service
+        , service
         , estimated_delivery_at
         , delivered_at
 		, DATEDIFF(day, created_at, delivered_at) AS days_to_deliver        
         , status
-        , date_load
-    FROM stg_orders
+    FROM stg_sql_server_dbo__orders
     )
 
 SELECT * FROM renamed_casted
+        
+
+
+
