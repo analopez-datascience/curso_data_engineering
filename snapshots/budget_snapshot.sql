@@ -1,19 +1,31 @@
--- Foto de como están los datos de origen
--- de primeras el dbt_valid_to está a nulo porque no hay cambios
--- cuando se produzca un cambio en el registro, 
--- en este campo aparecerá la fecha hasta la que fue el registro válido
 
-{% snapshot budget_snapshot %}
+      
+  
+    
 
-{{
-    config(
-      target_schema='snapshots',
-      unique_key='_row',
-      strategy='timestamp',
-      updated_at='_fivetran_synced',
-    )
-}}
+        create or replace  table ALUMNO22_DEV_SILVER_DB.snapshots.budget_snapshot
+         as
+        (
 
-select * from {{ source('google_sheets', 'budget') }}
+    select *,
+        md5(coalesce(cast(_row as varchar ), '')
+         || '|' || coalesce(cast(_fivetran_synced as varchar ), '')
+        ) as dbt_scd_id,
+        _fivetran_synced as dbt_updated_at,
+        _fivetran_synced as dbt_valid_from,
+        nullif(_fivetran_synced, _fivetran_synced) as dbt_valid_to
+    from (
+        
 
-{% endsnapshot %}
+
+
+select * from ALUMNO22_DEV_BRONZE_DB.google_sheets.budget
+
+    ) sbq
+
+
+
+        );
+      
+  
+  
